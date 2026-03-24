@@ -13,6 +13,16 @@ public interface TransportDao {
 
     List<Route> getActiveRoutesByCompany(Long companyId);
 
+    List<Route> searchActiveRoutes(String routeNumberPart, String routeNamePart);
+
+    Optional<Route> getRouteById(Long routeId);
+
+    Route createRoute(Route route);
+
+    Optional<Route> updateRoute(Long routeId, Route updatedRoute);
+
+    boolean deactivateRoute(Long routeId);
+
     List<RouteStop> getOrderedStopsForRoute(Long routeId);
 
     Optional<BigDecimal> getFare(Long routeId, Long fromRouteStopId, Long toRouteStopId);

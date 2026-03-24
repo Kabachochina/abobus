@@ -11,5 +11,13 @@ public interface OrderDao {
 
     List<OrderEntity> getPaidOrdersByClient(Long clientId);
 
+    Optional<OrderEntity> getOrderById(Long orderId);
+
+    OrderEntity createOrder(OrderEntity order);
+
+    Optional<OrderEntity> markOrderAsPaid(Long orderId);
+
+    Optional<OrderEntity> markOrderPaymentFailed(Long orderId);
+
     Optional<OrderEntity> cancelOrder(Long orderId, String reason);
 }
