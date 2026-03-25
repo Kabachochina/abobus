@@ -277,4 +277,35 @@ public class OrderDaoTest extends BaseIntegrationTest {
         assertEquals(order.getCanceledReason(), "already canceled");
         assertNotNull(order.getCanceledAt());
     }
+
+    @Test
+    public void shouldKeepExplicitFieldsWhenCreateOrder() {
+        OrderEntity template = orderDao.getOrderById(1L).orElseThrow();
+
+        OrderEntity order = new OrderEntity();
+        order.setClient(template.getClient());
+        order.setTrip(template.getTrip());
+        order.setFromRouteStop(template.getFromRouteStop());
+        order.setToRouteStop(template.getToRouteStop());
+        order.setPrice(new BigDecimal("199.00"));
+
+        java.time.OffsetDateTime createdAt =
+                java.time.OffsetDateTime.parse("2026-03-01T12:00:00+03:00");
+        order.setCreatedAt(createdAt);
+        order.setStatus("paid");
+        order.setPaymentStatus("paid");
+
+        OrderEntity saved = orderDao.createOrder(order);
+
+        assertNotNull(saved);
+        assertNotNull(saved.getId());
+        assertEquals(saved.getPrice(), new BigDecimal("199.00"));
+        assertEquals(saved.getCreatedAt(), createdAt);
+        assertEquals(saved.getStatus(), "paid");
+        assertEquals(saved.getPaymentStatus(), "paid");
+
+        assertNull(saved.getPaidAt());
+        assertNull(saved.getCanceledAt());
+        assertNull(saved.getCanceledReason());
+    }
 }

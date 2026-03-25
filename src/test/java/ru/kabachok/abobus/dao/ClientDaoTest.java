@@ -181,4 +181,28 @@ public class ClientDaoTest extends BaseIntegrationTest {
         assertFalse(fromDb.getIsDeleted());
         assertNotNull(fromDb.getCreatedAt());
     }
+
+    @Test
+    public void shouldKeepCreatedAtWhenCreateClientWithExplicitCreatedAt() {
+        Client client = new Client();
+        client.setFullName("Клиент с датой");
+        client.setEmail("withdate@example.com");
+        client.setPhone("+7-999-555-55-55");
+        client.setAddress("Адрес с датой");
+
+        java.time.OffsetDateTime createdAt =
+                java.time.OffsetDateTime.parse("2026-03-01T10:15:30+03:00");
+        client.setCreatedAt(createdAt);
+
+        Client saved = clientDao.createClient(client);
+
+        assertNotNull(saved);
+        assertNotNull(saved.getId());
+        assertEquals(saved.getFullName(), "Клиент с датой");
+        assertEquals(saved.getEmail(), "withdate@example.com");
+        assertEquals(saved.getPhone(), "+7-999-555-55-55");
+        assertEquals(saved.getAddress(), "Адрес с датой");
+        assertFalse(saved.getIsDeleted());
+        assertEquals(saved.getCreatedAt(), createdAt);
+    }
 }
