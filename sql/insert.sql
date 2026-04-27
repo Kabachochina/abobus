@@ -126,3 +126,13 @@ INSERT INTO orders (id,client_id,trip_id,from_route_stop_id,to_route_stop_id,pri
     (10,3,6,13,14,279.00,'created','pending','2026-03-07 09:05:00+03',NULL,NULL,NULL),
     (11,2,7,15,18,459.00,'paid','paid','2026-03-08 12:00:00+03','2026-03-08 12:01:00+03',NULL,NULL),
     (12,6,7,16,18,329.00,'paid','paid','2026-03-08 12:02:00+03','2026-03-08 12:03:00+03',NULL,NULL);
+
+SELECT setval('company_id_seq', COALESCE((SELECT MAX(id) FROM company), 1), true);
+SELECT setval('stop_id_seq', COALESCE((SELECT MAX(id) FROM stop), 1), true);
+SELECT setval('route_id_seq', COALESCE((SELECT MAX(id) FROM route), 1), true);
+SELECT setval('route_stop_id_seq', COALESCE((SELECT MAX(id) FROM route_stop), 1), true);
+SELECT setval('route_fare_id_seq', COALESCE((SELECT MAX(id) FROM route_fare), 1), true);
+SELECT setval('trip_id_seq', COALESCE((SELECT MAX(id) FROM trip), 1), true);
+SELECT setval('trip_stop_time_id_seq', COALESCE((SELECT MAX(id) FROM trip_stop_time), 1), true);
+SELECT setval('client_id_seq', COALESCE((SELECT MAX(id) FROM client), 1), true);
+SELECT setval('orders_id_seq', COALESCE((SELECT MAX(id) FROM orders), 1), true);

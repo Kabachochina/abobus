@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'war'
     id 'org.springframework.boot' version '3.3.2'
     id 'io.spring.dependency-management' version '1.1.6'
 }
@@ -17,7 +18,11 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
+    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
     implementation 'org.postgresql:postgresql'
 
     compileOnly 'org.projectlombok:lombok'
@@ -25,8 +30,46 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.testng:testng:7.10.2'
+    testImplementation 'org.seleniumhq.selenium:selenium-java:4.23.0'
+    testImplementation 'org.seleniumhq.selenium:htmlunit3-driver:4.23.0'
 }
 
 test {
     useTestNG()
+}
+
+tasks.register('createDb', JavaExec) {
+    group = 'database'
+    description = 'Creates PostgreSQL database for the application.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'ru.kabachok.abobus.util.DatabaseTool'
+    args 'create'
+}
+
+tasks.register('initDb', JavaExec) {
+    group = 'database'
+    description = 'Creates and initializes PostgreSQL database for the application.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'ru.kabachok.abobus.util.DatabaseTool'
+    args 'init'
+}
+
+tasks.register('printDb', JavaExec) {
+    group = 'database'
+    description = 'Prints row counts for application database tables.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'ru.kabachok.abobus.util.DatabaseTool'
+    args 'print'
+}
+
+tasks.register('dropDb', JavaExec) {
+    group = 'database'
+    description = 'Drops PostgreSQL application database.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'ru.kabachok.abobus.util.DatabaseTool'
+    args 'drop'
+}
+
+bootRun {
+    dependsOn initDb
 }
